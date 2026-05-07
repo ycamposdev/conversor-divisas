@@ -24,11 +24,19 @@ def handleConvertir():
 def index():
     datos=getMoneda()
     rest=None
+    cantidad_enviada=request.form.get('cantidad', "")
+
     if(request.method=='POST'):
        resultado=handleConvertir()
        rest=resultado
-    return render_template('index.html', data=datos, result=rest)
+
+    return render_template('index.html',
+                            data=datos,
+                            result=(round(rest, 2) if rest else ""),
+                            moneda_origen=request.form.get("moneda_origen"),
+                            moneda_destino=request.form.get("moneda_destino"),
+                            cantidad=cantidad_enviada)
 
 # Definir el PORT de escucha
 if __name__ == '__main__':
-    app.run(debug=True, port=5050)
+    app.run(debug=True, port=5000)

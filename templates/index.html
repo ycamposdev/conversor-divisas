@@ -16,11 +16,12 @@
         <input
           type="number"
           name="cantidad"
+          step="any"
           placeholder="Cantidad"
+          value="{{ cantidad }}"
           required
           class="w-full p-3 rounded-lg bg-slate-700 border border-slate-600 focus:outline-none focus:ring-2 focus:ring-sky-400"
         />
-
         <!-- Moneda origen -->
         {% set listaMoneda = data.conversion_rates.keys() %}
         <select
@@ -28,22 +29,29 @@
           class="w-full p-3 rounded-lg bg-slate-700 border border-slate-600 focus:outline-none focus:ring-2 focus:ring-sky-400"
         >
           {% for moneda in listaMoneda %}
-          <option value="{{moneda}}">{{moneda}}</option>
+          <option
+            value="{{moneda}}"
+            {% if moneda==moneda_origen %}selected {%endif%}
+          >
+            {{moneda}}
+          </option>
           {% endfor %}
         </select>
-
-        <!-- Moneda destino -->
+         <!-- Moneda Destino -->
         {% set listaMoneda =data.conversion_rates.keys()%}
         <select
           name="moneda_destino"
           class="w-full p-3 rounded-lg bg-slate-700 border border-slate-600 focus:outline-none focus:ring-2 focus:ring-sky-400"
         >
           {% for moneda in listaMoneda %}
-          <option value="{{moneda}}">{{moneda}}</option>
+          <option
+            value="{{moneda}}"
+            {% if moneda==moneda_destino %} selected {%endif%}
+          >
+            {{moneda}}
+          </option>
           {% endfor %}
         </select>
-
-        <!-- Botón -->
         <button
           type="submit"
           class="w-full bg-sky-400 text-black font-semibold p-3 rounded-lg hover:bg-sky-300 transition"
@@ -51,10 +59,7 @@
           Convertir
         </button>
       </form>
-
-      <!-- Resultado dinámico (Flask) -->
-
-      <div class="mt-6 text-center text-lg font-medium">{{result}}</div>
+      <div class="mt-6 text-center text-lg font-medium">{{result}} {{moneda_destino or '' }}</div>
     </div>
   </body>
 </html>
