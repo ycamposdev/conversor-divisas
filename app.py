@@ -13,21 +13,30 @@ def getMoneda():
     except:
      return None
 
+def obtener_moneda():
+    cantidad=float(request.form.get('cantidad'))
+    valor_monedaOrigen=request.form.get("moneda_origen") #PEN
+    valor_monedaDestino=request.form.get("moneda_destino")
+    return cantidad, valor_monedaOrigen, valor_monedaDestino
+
 def handleConvertir():
-   cantidad=float(request.form.get('cantidad'))
-   monedaOrigen=request.form.get("moneda_origen") #PEN
-   monedaDestino=request.form.get("moneda_destino")
-   resultado = cantidad / getMoneda()["conversion_rates"][monedaOrigen] * getMoneda()["conversion_rates"][monedaDestino]
+    cantidad, valor_monedaOrigen, valor_monedaDestino=obtener_moneda()
+    moneda=getMoneda()["conversion_rates"]
+    return  cantidad, moneda[valor_monedaOrigen], moneda[valor_monedaDestino]
+  
+def handleCalcular():
+   cantidad, monedaOrigen, monedaDestino=handleConvertir()
+   resultado = cantidad / monedaOrigen * monedaDestino
    return resultado
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
     datos=getMoneda()
     rest=None
-    cantidad_enviada=request.form.get('cantidad', "")
+    cantidad_convertir=request.form.get('cantidad', "")
 
     if(request.method=='POST'):
-       resultado=handleConvertir()
+       resultado=handleCalcular()
        rest=resultado
 
     return render_template('index.html',
@@ -35,7 +44,7 @@ def index():
                             result=(round(rest, 2) if rest else ""),
                             moneda_origen=request.form.get("moneda_origen"),
                             moneda_destino=request.form.get("moneda_destino"),
-                            cantidad=cantidad_enviada)
+                            cantidad=cantidad_convertir)
 
 # Definir el PORT de escucha
 if __name__ == '__main__':
