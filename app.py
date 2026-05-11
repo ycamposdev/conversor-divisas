@@ -39,9 +39,14 @@ def index():
        resultado=handleCalcular()
        rest=resultado
       
+    if rest:
+       resultado_espacios=f"{round(rest, 2):,}".replace(","," ")
+    else:
+       resultado_espacios=""
+
     return render_template('index.html',
                             data=datos,
-                            result=f"{(round(rest, 2) if rest else ""):,}".replace(","," "),
+                            result=resultado_espacios,
                             moneda_origen=request.form.get("moneda_origen"),
                             moneda_destino=request.form.get("moneda_destino"),
                             cantidad=cantidad_convertir)
