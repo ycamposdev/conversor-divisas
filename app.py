@@ -41,7 +41,7 @@ def index():
       
     return render_template('index.html',
                             data=datos,
-                            result=(round(rest, 2) if rest else ""),
+                            result=f"{(round(rest, 2) if rest else ""):,}".replace(","," "),
                             moneda_origen=request.form.get("moneda_origen"),
                             moneda_destino=request.form.get("moneda_destino"),
                             cantidad=cantidad_convertir)
